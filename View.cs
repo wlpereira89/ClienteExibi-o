@@ -28,7 +28,7 @@ namespace ClienteExibicao
         private void BtnListarImg_Click(object sender, EventArgs e)
         {
             EditImagem.DataSource = client.GetAsync("http://localhost:52370/api/data/"
-                +EditRegistro.SelectedValue+"/"+EditTipo.Text).Result
+                +EditRegistro.SelectedValue + "/"+EditTipo.Text).Result
                 .Content.ReadAsStringAsync().Result.Replace("\"", "")
                 .Replace("[", "").Replace("]", "").Split(',');
             BtnExibirImg.Visible = true;
@@ -36,8 +36,14 @@ namespace ClienteExibicao
 
         private void BtnExibirImg_Click(object sender, EventArgs e)
         {
-            if (EditImagem.Text == "root")
-                PicImagem.ImageLocation = "http://localhost:52370/Data/" + EditImagem.Text;
+            String[] arquivo = EditImagem.SelectedValue.ToString().Split('.');
+            var a = "http://localhost:52370/api/data/baixar"
+                + EditRegistro.SelectedValue + "/" + arquivo[0] + "/" + arquivo[1];
+                
+            PicImagem.ImageLocation = client.GetAsync("http://localhost:52370/api/data/baixar"
+                + "/" + EditRegistro.SelectedValue + "/" +arquivo[0] + "/" 
+                + arquivo[1]).Result.Content.ReadAsStringAsync().Result
+                .Replace("\"", "").Replace("[", "").Replace("]", "");
 
         }
     }
